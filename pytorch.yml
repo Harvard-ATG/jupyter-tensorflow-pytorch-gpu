@@ -1,0 +1,32 @@
+name: pytorch
+
+channels:
+    - conda-forge
+
+dependencies:
+    - arviz
+    - gensim
+    - imageio
+    - ipykernel=6.9.2
+    - matplotlib
+    - mkl-service
+    - nltk
+    - numpy
+    - opencv
+    - pandas
+    - pillow
+    - pip
+    - pymc3
+    - python=3.9 # conda-forge/pytorch doesn't have builds for python3.10 yet
+    - requests
+    - scikit-learn
+    - scikit-image
+    - scipy
+    - seaborn
+    - statsmodels
+    - pytorch
+    - tqdm
+    - transformers
+
+    - pip:
+        - gap-stat

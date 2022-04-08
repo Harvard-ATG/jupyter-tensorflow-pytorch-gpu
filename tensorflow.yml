@@ -1,0 +1,37 @@
+name: tensorflow
+
+channels:
+    - conda-forge
+
+dependencies:
+    - arviz
+    - gensim
+    - imageio
+    - ipykernel=6.9.2
+    - matplotlib
+    - mkl-service
+    - nltk
+    - numpy
+    - opencv
+    - pandas
+    - pillow
+    - pip
+    - pymc3
+    - python=3.10
+    - requests
+    - scikit-learn
+    - scikit-image
+    - scipy
+    - seaborn
+    - statsmodels
+#   - pytorch
+    - tqdm
+    - transformers
+
+    - pip:
+        - gap-stat
+        - tensorflow==2.8.0
+        - tensorflow_addons
+        - tensorflow_datasets
+        - tensorflow_hub
+        - tf_keras_vis

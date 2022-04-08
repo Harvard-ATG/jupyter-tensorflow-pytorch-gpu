@@ -1,0 +1,9 @@
+name: base
+
+channels:
+    - conda-forge
+
+dependencies:
+    - notebook=6.4.8
+    - python=3.10
+    - ipykernel=6.9.2
