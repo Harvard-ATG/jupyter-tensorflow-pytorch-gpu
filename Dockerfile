@@ -107,7 +107,7 @@ RUN set -x && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Setup base environment with jupyterhub and jupyter notebook
+# Setup base environment 
 COPY --chown=${NB_UID} base.yml .
 RUN mamba env update -n base -f base.yml && \
     rm base.yml && \
