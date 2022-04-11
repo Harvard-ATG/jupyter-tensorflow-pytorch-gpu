@@ -44,6 +44,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=harvardat/jupyter-tensorflow-pytorch-gpu:latest
+          cache-to: type=inline
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
