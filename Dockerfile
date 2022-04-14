@@ -107,11 +107,12 @@ RUN set -x && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Setup base environment 
+# Setup base environment
 COPY --chown=${NB_UID} base.yml .
 RUN mamba env update -n base -f base.yml && \
     rm base.yml && \
     mamba clean --all -f -y && \
+    jupyter notebook --generate-config && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
@@ -139,6 +140,28 @@ EXPOSE 8888
 
 # Configure container startup
 ENTRYPOINT ["tini", "-g", "--"]
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888"]
+CMD ["start-notebook.sh"]
+
+# Copy local files as late as possible to avoid cache busting
+COPY start.sh start-notebook.sh start-singleuser.sh /usr/local/bin/
+# Currently need to have both jupyter_notebook_config and jupyter_server_config to support classic and lab
+COPY jupyter_server_config.py /etc/jupyter/
+
+# Fix permissions on /etc/jupyter as root
+USER root
+
+# Legacy for Jupyter Notebook Server, see: [#1205](https://github.com/jupyter/docker-stacks/issues/1205)
+RUN sed -re "s/c.ServerApp/c.NotebookApp/g" \
+    /etc/jupyter/jupyter_server_config.py > /etc/jupyter/jupyter_notebook_config.py && \
+    fix-permissions /etc/jupyter/
+
+# HEALTHCHECK documentation: https://docs.docker.com/engine/reference/builder/#healthcheck
+# This healtcheck works well for `lab`, `notebook`, `nbclassic`, `server` and `retro` jupyter commands
+# https://github.com/jupyter/docker-stacks/issues/915#issuecomment-1068528799
+HEALTHCHECK  --interval=15s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget -O- --no-verbose --tries=1 http://localhost:8888/api || exit 1
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER ${NB_UID}
 
 WORKDIR "${HOME}"
